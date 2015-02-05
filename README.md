@@ -53,9 +53,6 @@ There are a number of options you can pass to the pageParser, if you need a prev
 | setTitle | Boolean | true | If true, the title of the page will be updated according to the loaded page. |
 | trigger | String | 'click' | The event to trigger the load on, default is click, but could be 'mouseenter' etc. |
 | urlAttribute | String | 'href' | The attribute where the URL is stored, default is href (for a href="") but can be any HTML attribute. |
-
-| Option Name | Type | Default | Description |
-| ----------- | ---- | ------- | ----------- |
 | before | Callback | none | The function that is called before the loading begins, say for displaying a loading screen. 'this' returns the element that was triggered, see the demo for more info. |
 | finished | Callback | none | The function that is called when everything is finished, say for hiding a loading screen. 'this' returns the element that was triggered, see the demo for more info. |
 | error | Callback | none | The function that is called when the page cannot be loaded. 'this' returns the xhr status. |
