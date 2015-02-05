@@ -1,0 +1,58 @@
+<html>
+<head>
+	<title>Second page - AjaxPageParser</title>
+	
+	<link rel="stylesheet" href="http://terwanerik.github.io/AjaxPageParser/css/demo.css" />
+	
+	<link href='http://fonts.googleapis.com/css?family=Raleway:400,200,600' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div id="container">	
+	<div class="page">	
+		<div class="text">
+			<h1>AjaxPageParser</h1>
+			<h2>The second page.</h2>
+			<p>&mdash;</p>
+			<p>Made by Erik Terwan, for more info check <a href="https://github.com/terwanerik/AjaxPageParser">GitHub</a>.</p>
+		</div>
+	</div>
+</div>
+
+<!-- normally all this would be loaded from a php file, MVC structure etc -->
+<div class="menu">
+	<a href="http://terwanerik.github.io/AjaxPageParser/index.html">Index page</a>
+	<a href="http://terwanerik.github.io/AjaxPageParser/pages/second.html" class="active">Second page</a>
+	<a href="http://terwanerik.github.io/AjaxPageParser/pages/third.html">Third page</a>
+</div>
+
+<div class="loader">
+	<span><img src="http://terwanerik.github.io/AjaxPageParser/img/loader.gif" alt="" /></span>
+</div>
+
+<script src="http://terwanerik.github.io/AjaxPageParser/src/jquery-1.11.2.min.js" type="text/javascript"></script>
+<script src="http://terwanerik.github.io/AjaxPageParser/src/jquery.pageparser-0.1.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$(".menu a").pageParser({
+		container:$('#container'),
+		parseElement: ".page",
+		before: function(){
+			$(".loader").show();
+		},
+		finished: function(){
+			$(".menu a").removeClass('active');
+			$(this).addClass('active');
+			
+			//timeout for demo purposes
+			setTimeout(function(){
+				$(".loader").hide();
+			}, 300);
+		},
+		error: function(){
+			alert('Whoops, something went wrong.');
+		}
+	});
+});
+</script>
+</body>
+</html>
