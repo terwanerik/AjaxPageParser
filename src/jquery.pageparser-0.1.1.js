@@ -1,7 +1,7 @@
 /* 
  * AjaxPageParser jQuery Plugin
  * Made by Erik Terwan
- * 5 February 2015
+ * 6 February 2015 - 0.1.1
  * 
  * This plugin is provided as-is and released under the terms of the MIT license.
  */
@@ -35,9 +35,11 @@
 		//initialize
 		function init()
 		{
-			$thisElement.each(function(){
+			$thisElement.each(function(count){
 				//set the 'on' trigger
 				var $hrefElement = $(this);
+				
+				$(this).attr('data-ppid', count + 1); //set unique id for the popstate
 				
 				$(this).on(settings.trigger, function(e){
 					loadPage($hrefElement); //do the magic
@@ -48,15 +50,25 @@
 				});
 			});
 			
+			$(window).on("popstate", function(){
+				//if its a pushed state we dynamicly load the previous page
+				if(history.state){
+					if($("*[data-ppid="+history.state.id+"]").length > 0){ //if exists then load
+						loadPage($("*[data-ppid="+history.state.id+"]"), true);
+					}
+				}
+			});
+			
 			return $thisElement; //return self for chaining
 		}
 		
-		function loadPage($hrefElement)
+		function loadPage($hrefElement, popped)
 		{
 			settings.before.call($hrefElement); //call the 'before' callback
 			
 			var originalUrl = $hrefElement.attr(settings.urlAttribute);
 			var urlToLoad = originalUrl;
+			var elementId = $hrefElement.attr('data-ppid');
 			
 			if(settings.parseElement != null){
 				urlToLoad += " "+settings.parseElement; //append the 
@@ -64,15 +76,18 @@
 			
 			$(settings.container).load(urlToLoad, function(response, status, xhr){
 			  if(status == "success"){
-			  	if(settings.dynamicUrl){
-			  		history.pushState(null, null, originalUrl); //change url to the one provided
+			  	var titlePart = response.split("title>"); //dirty little trick to get an html element
+			  	titlePart = titlePart[1].split("</"); //since the <title> element is always the same, this is possible
+			  	var title = titlePart[0];
+			  		
+			  	if(settings.dynamicUrl && popped != true){
+			  		var state = {name: urlToLoad, page: title, id:elementId};
+			  		
+			  		history.pushState(state, title, originalUrl); //change url to the one provided
 			  	}
 			  	
 			  	if(settings.setTitle){
-			  		var titlePart = response.split("title>"); //dirty little trick to get an html element
-			  		titlePart = titlePart[1].split("</"); //since the <title> element is always the same, this is possible
-			  		
-			  		document.title = titlePart[0]; //set the title
+			  		document.title = title; //set the title
 			  	}
 			  	
 			  	settings.finished.call($hrefElement); //call the 'finished' callback

@@ -8,7 +8,7 @@ A live demo is available on [Github Pages](http://terwanerik.github.io/AjaxPageP
 The plugin is really simple, add the jquery.pageparser-[version].min.js to your project folder and include it.
 
 ```html
-<script src="src/jquery.pageparser-0.1.min.js" type="text/javascript"></script>
+<script src="src/jquery.pageparser-0.1.1.min.js" type="text/javascript"></script>
 ```
 
 Place a container anywhere on your page, a div is preferred.
