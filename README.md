@@ -49,6 +49,7 @@ There are a number of options you can pass to the pageParser, if you need a prev
 | ----------- | ---- | ------- | ----------- |
 | container | jQuery Object | null | The container for the page to be inserted into. - REQUIRED |
 | dynamicUrl | Boolean | true | If false, the plugin doesn't update the URL to match the loaded page, a refresh then returns the original page.  |
+| initialElement| jQuery Object | null | The object that is active on page-load. This is needed if you want to use dynamicUrl's and still be able to use the back-button. You can find a preview on how to use it in the demo. |
 | parseElement | String | null | The element on the page to get, if null the complete page will be loaded into the container. The format is a string with a jQuery selector (e.g. ".someDiv", "#container .innerDiv") |
 | setTitle | Boolean | true | If true, the title of the page will be updated according to the loaded page. |
 | trigger | String | 'click' | The event to trigger the load on, default is click, but could be 'mouseenter' etc. |

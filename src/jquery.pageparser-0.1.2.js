@@ -1,7 +1,7 @@
 /* 
  * AjaxPageParser jQuery Plugin
  * Made by Erik Terwan
- * 6 February 2015 - 0.1.1
+ * 6 February 2015 - 0.1.2
  * 
  * This plugin is provided as-is and released under the terms of the MIT license.
  */
@@ -16,6 +16,7 @@
 		var settings = $.extend({
 			container: null, //the container for the data to be displayed in, cannot be null - required
 			dynamicUrl: true, //if false, the plugin doesn't update the URL to match the loaded page
+			initialElement: null, //the element that is active / the page is loaded from on initial load. Needed to go back to the first page in with popstate. Only usefull if you use dynamic urls
 			parseElement: null, //the element on the page you want to implement, if empty it loads the whole page
 			setTitle: true, //set the title of the page to the one you are loading
 			trigger: 'click', //when to trigger the loading, default is on click
@@ -49,6 +50,16 @@
 					return false; //also return false
 				});
 			});
+			
+			//check for initial element, to fix the popstate
+			if(settings.initialElement != null){
+				if(settings.dynamicUrl){
+					var originalUrl = $(settings.initialElement).attr(settings.urlAttribute);
+					var state = {name: originalUrl, page: document.title, id: $(settings.initialElement).attr('data-ppid')};
+					
+					history.pushState(state, document.title, originalUrl); //push the state so we can get back to this state
+				}
+			}
 			
 			$(window).on("popstate", function(){
 				//if its a pushed state we dynamicly load the previous page
