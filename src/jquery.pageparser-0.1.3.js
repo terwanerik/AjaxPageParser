@@ -1,7 +1,7 @@
 /* 
  * AjaxPageParser jQuery Plugin
  * Made by Erik Terwan
- * 6 February 2015 - 0.1.2
+ * 28 September 2015 - 0.1.3
  * 
  * This plugin is provided as-is and released under the terms of the MIT license.
  */
@@ -21,12 +21,14 @@
 			setTitle: true, //set the title of the page to the one you are loading
 			trigger: 'click', //when to trigger the loading, default is on click
 			urlAttribute: 'href', //the attribute to be checked for the url, default is href (for a tags)
-			
+			loadDelay: null, //sometimes nice for animation
 			before : function(){}, //the callback that gets called before loading, say for displaying a loader. 'this' returns the clicked button
 			finished : function(){}, //the callback that gets called after everything is loaded, say to hide the loader, toggle button state.  'this' returns the clicked button
 			error : function(){} //the callback that gets called after an error, do custom error handling here. Returns the xhr status.
 		}, options);
 		
+		var loadCount = 0; //make sure to not load if the element is initialy loaded via the popstate call
+		var shouldCheckCount = false; //if it should check the loadCount to avoid the first popstate call
 		var $thisElement = this; //for use inside private functions etc.
 		
 		/*
@@ -54,6 +56,8 @@
 			//check for initial element, to fix the popstate
 			if(settings.initialElement != null){
 				if(settings.dynamicUrl){
+					shouldCheckCount = true;
+					
 					var originalUrl = $(settings.initialElement).attr(settings.urlAttribute);
 					var state = {name: originalUrl, page: document.title, id: $(settings.initialElement).attr('data-ppid')};
 					
@@ -61,11 +65,16 @@
 				}
 			}
 			
+			
 			$(window).on("popstate", function(){
 				//if its a pushed state we dynamicly load the previous page
 				if(history.state){
-					if($("*[data-ppid="+history.state.id+"]").length > 0){ //if exists then load
-						loadPage($("*[data-ppid="+history.state.id+"]"), true);
+					if(shouldCheckCount && loadCount != 0){
+						if($("*[data-ppid="+history.state.id+"]").length > 0){ //if exists then load
+							loadPage($("*[data-ppid="+history.state.id+"]"), true);
+						}
+					} else{
+						loadCount = 1;
 					}
 				}
 			});
@@ -85,27 +94,30 @@
 				urlToLoad += " "+settings.parseElement; //append the 
 			}
 			
-			$(settings.container).load(urlToLoad, function(response, status, xhr){
-			  if(status == "success"){
-			  	var titlePart = response.split("title>"); //dirty little trick to get an html element
-			  	titlePart = titlePart[1].split("</"); //since the <title> element is always the same, this is possible
-			  	var title = titlePart[0];
-			  		
-			  	if(settings.dynamicUrl && popped != true){
-			  		var state = {name: urlToLoad, page: title, id:elementId};
-			  		
-			  		history.pushState(state, title, originalUrl); //change url to the one provided
-			  	}
-			  	
-			  	if(settings.setTitle){
-			  		document.title = title; //set the title
-			  	}
-			  	
-			  	settings.finished.call($hrefElement); //call the 'finished' callback
-			  } else if(status == "error"){
-			    settings.error.call(xhr.status); //call the 'error' callback, 'this' = xhr.status
-			  }
-			});
+			//alert(settings.loadDelay);
+			setTimeout(function() {
+				$(settings.container).load(urlToLoad, function(response, status, xhr){
+				  if(status == "success"){
+				  	var titlePart = response.split("title>"); //dirty little trick to get an html element
+				  	titlePart = titlePart[1].split("</"); //since the <title> element is always the same, this is possible
+				  	var title = titlePart[0];
+				  		
+				  	if(settings.dynamicUrl && popped != true){
+				  		var state = {name: urlToLoad, page: title, id:elementId};
+				  		
+				  		history.pushState(state, title, originalUrl); //change url to the one provided
+				  	}
+				  	
+				  	if(settings.setTitle){
+				  		document.title = title; //set the title
+				  	}
+				  	
+				  	settings.finished.call($hrefElement); //call the 'finished' callback
+				  } else if(status == "error"){
+				    settings.error.call(xhr.status); //call the 'error' callback, 'this' = xhr.status
+				  }
+				});
+			}, settings.loadDelay);
 		}
 		
 		return init(); //return init > this for chaining
