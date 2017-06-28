@@ -1,10 +1,13 @@
-#AjaxPageParser - Load pages asynchronously with ease
-Another one of those plugins that makes my life easier, this plugin loads a page or some part of it from a website via AJAX, adjusts the page title and URL. With before, finished and error callbacks, to show loaders, update menu items etc. It works best if you use some kind of MVC structure, so the URL that is being called is a standalone website
+## AjaxPageParser - Load pages asynchronously with ease
 
-##Demo
+Please note: this project is over 2 years old, and has not been tested with newer versions of jQuery.
+
+This plugin loads a page or some part of it from a website via AJAX, adjusts the page title and URL. With before, finished and error callbacks, to show loaders, update menu items etc. It works best if you use some kind of MVC structure, so the URL that is being called is a standalone website
+
+## Demo
 A live demo is available on [Github Pages](http://terwanerik.github.io/AjaxPageParser).
 
-##Usage
+## Usage
 The plugin is really simple, add the jquery.pageparser-[version].min.js to your project folder and include it.
 
 ```html
@@ -42,7 +45,7 @@ $(function(){
 });
 ```
 
-##Options
+## Options
 There are a number of options you can pass to the pageParser, if you need a preview on how to do that, check the [live demo](http://terwanerik.github.io/AjaxPageParser).
 
 | Option Name | Type | Default | Description |
@@ -58,5 +61,5 @@ There are a number of options you can pass to the pageParser, if you need a prev
 | finished | Callback | none | The function that is called when everything is finished, say for hiding a loading screen. 'this' returns the element that was triggered, see the demo for more info. |
 | error | Callback | none | The function that is called when the page cannot be loaded. 'this' returns the xhr status. |
 
-##Known issues
+## Known issues
 You need to have a wrapper for your page in the container, if not, the container from the new page is inserted into the container, instead of the page, this is only valid when using the parseElement option. Basically; you cannot have the same container and parseElement.
