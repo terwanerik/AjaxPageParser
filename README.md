@@ -1,6 +1,6 @@
 ## AjaxPageParser - Load pages asynchronously with ease
 
-Please note: this project is over 2 years old, and has not been tested with newer versions of jQuery.
+> ⚠️ **Please note:** this project is over 2 years old, and has not been tested with newer versions of jQuery.
 
 This plugin loads a page or some part of it from a website via AJAX, adjusts the page title and URL. With before, finished and error callbacks, to show loaders, update menu items etc. It works best if you use some kind of MVC structure, so the URL that is being called is a standalone website
 
